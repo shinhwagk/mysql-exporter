@@ -220,10 +220,15 @@ func (ScrapePerfEventsStatements) Scrape(ctx context.Context, db *sql.DB, ch cha
 	)
 	for perfSchemaEventsStatementsRows.Next() {
 		if err := perfSchemaEventsStatementsRows.Scan(
-			&schemaName, &digest, &countStar, &timerWait, &lockTime, &errors, &warnings, &rowsAffected,
-			&rowsExamined, &rowsSent, &rowsExamined, &tmpTables, &tmpDiskTables, &selectFullJoin,
-			&selectfullRangeJoin, &selectRange, &selectRangeCheck, &selectScan, &sortMergePasses, &sortRange,
-			&sortScan, &noIndexUsed, &noGoodIndexUsed, &quantile95, &quantile99, &quantile999,
+			&schemaName, &digest,
+			&countStar, &timerWait, &lockTime,
+			&errors, &warnings, &rowsAffected,
+			&rowsExamined, &rowsSent, &rowsExamined,
+			&tmpTables, &tmpDiskTables,
+			&selectFullJoin, &selectfullRangeJoin, &selectRange, &selectRangeCheck, &selectScan,
+			&sortMergePasses, &sortRange, &sortScan,
+			&noIndexUsed, &noGoodIndexUsed,
+			&quantile95, &quantile99, &quantile999,
 		); err != nil {
 			return err
 		}
