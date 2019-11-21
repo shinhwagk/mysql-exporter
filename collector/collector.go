@@ -28,8 +28,6 @@ const (
 	// Math constant for picoseconds to seconds.
 	picoSeconds = 1e12
 	// Query to check whether user/table/client stats are enabled.
-	userstatCheckQuery = `SHOW GLOBAL VARIABLES WHERE Variable_Name='userstat'
-		OR Variable_Name='userstat_running'`
 )
 
 var logRE = regexp.MustCompile(`.+\.(\d+)$`)
