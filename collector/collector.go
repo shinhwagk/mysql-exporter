@@ -27,7 +27,6 @@ const (
 	namespace = "mysql"
 	// Math constant for picoseconds to seconds.
 	picoSeconds = 1e12
-	// Query to check whether user/table/client stats are enabled.
 )
 
 var logRE = regexp.MustCompile(`.+\.(\d+)$`)
