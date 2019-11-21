@@ -18,72 +18,43 @@ package collector
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/go-kit/kit/log"
 	"github.com/prometheus/client_golang/prometheus"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 const perfEventsStatementsQuery = `
 	SELECT
-	    ifnull(SCHEMA_NAME, 'NONE') as SCHEMA_NAME,
-	    DIGEST,
-	    LEFT(DIGEST_TEXT, %d) as DIGEST_TEXT,
-	    COUNT_STAR,
-	    SUM_TIMER_WAIT,
-	    SUM_ERRORS,
-	    SUM_WARNINGS,
-	    SUM_ROWS_AFFECTED,
-	    SUM_ROWS_SENT,
-	    SUM_ROWS_EXAMINED,
-	    SUM_CREATED_TMP_DISK_TABLES,
-	    SUM_CREATED_TMP_TABLES,
-	    SUM_SORT_MERGE_PASSES,
-	    SUM_SORT_ROWS,
-	    SUM_NO_INDEX_USED
-	  FROM (
-	    SELECT *
-	    FROM performance_schema.events_statements_summary_by_digest
-	    WHERE SCHEMA_NAME NOT IN ('mysql', 'performance_schema', 'information_schema')
-	      AND LAST_SEEN > DATE_SUB(NOW(), INTERVAL %d SECOND)
-	    ORDER BY LAST_SEEN DESC
-	  )Q
-	  GROUP BY
-	    Q.SCHEMA_NAME,
-	    Q.DIGEST,
-	    Q.DIGEST_TEXT,
-	    Q.COUNT_STAR,
-	    Q.SUM_TIMER_WAIT,
-	    Q.SUM_ERRORS,
-	    Q.SUM_WARNINGS,
-	    Q.SUM_ROWS_AFFECTED,
-	    Q.SUM_ROWS_SENT,
-	    Q.SUM_ROWS_EXAMINED,
-	    Q.SUM_CREATED_TMP_DISK_TABLES,
-	    Q.SUM_CREATED_TMP_TABLES,
-	    Q.SUM_SORT_MERGE_PASSES,
-	    Q.SUM_SORT_ROWS,
-	    Q.SUM_NO_INDEX_USED
-	  ORDER BY SUM_TIMER_WAIT DESC
-	  LIMIT %d
+		schema_name,
+		digest,
+		count_star,
+		sum_timer_wait,
+		sum_lock_time,
+		sum_errors,
+		sum_warnings,
+		sum_rows_affected,
+		sum_rows_sent,
+		sum_rows_examined,
+		sum_created_tmp_disk_tables,
+		sum_created_tmp_tables,
+		sum_select_full_join,
+		sum_select_full_range_join,
+		sum_select_range,
+		sum_select_range_check,
+		sum_select_scan,
+		sum_sort_merge_passes,
+		sum_sort_range,
+		sum_sort_rows,
+		sum_sort_scan,
+		sum_no_index_used,
+		sum_no_good_index_used,
+		quantile_95,
+		quantile_99,
+		quantile_999
+	FROM performance_schema.events_statements_summary_by_digest
+		WHERE schema_name NOT IN ('mysql', 'performance_schema', 'information_schema')
+		AND last_seen >= DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i'), INTERVAL 60 SECOND)
 	`
-
-// Tunable flags.
-var (
-	perfEventsStatementsLimit = kingpin.Flag(
-		"collect.perf_schema.eventsstatements.limit",
-		"Limit the number of events statements digests by response time",
-	).Default("250").Int()
-	perfEventsStatementsTimeLimit = kingpin.Flag(
-		"collect.perf_schema.eventsstatements.timelimit",
-		"Limit how old the 'last_seen' events statements can be, in seconds",
-	).Default("86400").Int()
-	perfEventsStatementsDigestTextLimit = kingpin.Flag(
-		"collect.perf_schema.eventsstatements.digest_text_limit",
-		"Maximum length of the normalized statement text",
-	).Default("120").Int()
-)
 
 // Metric descriptors.
 var (
@@ -169,80 +140,74 @@ func (ScrapePerfEventsStatements) Version() float64 {
 
 // Scrape collects data from database connection and sends it over channel as prometheus metric.
 func (ScrapePerfEventsStatements) Scrape(ctx context.Context, db *sql.DB, ch chan<- prometheus.Metric, logger log.Logger) error {
-	perfQuery := fmt.Sprintf(
-		perfEventsStatementsQuery,
-		*perfEventsStatementsDigestTextLimit,
-		*perfEventsStatementsTimeLimit,
-		*perfEventsStatementsLimit,
-	)
 	// Timers here are returned in picoseconds.
-	perfSchemaEventsStatementsRows, err := db.QueryContext(ctx, perfQuery)
+	perfSchemaEventsStatementsRows, err := db.QueryContext(ctx, perfEventsStatementsQuery)
 	if err != nil {
 		return err
 	}
 	defer perfSchemaEventsStatementsRows.Close()
 
 	var (
-		schemaName, digest, digestText       string
+		schemaName, digest                   string
 		count, queryTime, errors, warnings   uint64
 		rowsAffected, rowsSent, rowsExamined uint64
 		tmpTables, tmpDiskTables             uint64
 		sortMergePasses, sortRows            uint64
-		noIndexUsed                          uint64
+		noIndexUsed    uint64
 	)
 	for perfSchemaEventsStatementsRows.Next() {
 		if err := perfSchemaEventsStatementsRows.Scan(
-			&schemaName, &digest, &digestText, &count, &queryTime, &errors, &warnings, &rowsAffected, &rowsSent, &rowsExamined, &tmpTables, &tmpDiskTables, &sortMergePasses, &sortRows, &noIndexUsed,
+			&schemaName, &digest, &count, &queryTime, &errors, &warnings, &rowsAffected, &rowsSent, &rowsExamined, &tmpTables, &tmpDiskTables, &sortMergePasses, &sortRows, &noIndexUsed,
 		); err != nil {
 			return err
 		}
 		ch <- prometheus.MustNewConstMetric(
 			performanceSchemaEventsStatementsDesc, prometheus.CounterValue, float64(count),
-			schemaName, digest, digestText,
+			schemaName, digest,
 		)
 		ch <- prometheus.MustNewConstMetric(
 			performanceSchemaEventsStatementsTimeDesc, prometheus.CounterValue, float64(queryTime)/picoSeconds,
-			schemaName, digest, digestText,
+			schemaName, digest,
 		)
 		ch <- prometheus.MustNewConstMetric(
 			performanceSchemaEventsStatementsErrorsDesc, prometheus.CounterValue, float64(errors),
-			schemaName, digest, digestText,
+			schemaName, digest,
 		)
 		ch <- prometheus.MustNewConstMetric(
 			performanceSchemaEventsStatementsWarningsDesc, prometheus.CounterValue, float64(warnings),
-			schemaName, digest, digestText,
+			schemaName, digest,
 		)
 		ch <- prometheus.MustNewConstMetric(
 			performanceSchemaEventsStatementsRowsAffectedDesc, prometheus.CounterValue, float64(rowsAffected),
-			schemaName, digest, digestText,
+			schemaName, digest,
 		)
 		ch <- prometheus.MustNewConstMetric(
 			performanceSchemaEventsStatementsRowsSentDesc, prometheus.CounterValue, float64(rowsSent),
-			schemaName, digest, digestText,
+			schemaName, digest,
 		)
 		ch <- prometheus.MustNewConstMetric(
 			performanceSchemaEventsStatementsRowsExaminedDesc, prometheus.CounterValue, float64(rowsExamined),
-			schemaName, digest, digestText,
+			schemaName, digest,
 		)
 		ch <- prometheus.MustNewConstMetric(
 			performanceSchemaEventsStatementsTmpTablesDesc, prometheus.CounterValue, float64(tmpTables),
-			schemaName, digest, digestText,
+			schemaName, digest,
 		)
 		ch <- prometheus.MustNewConstMetric(
 			performanceSchemaEventsStatementsTmpDiskTablesDesc, prometheus.CounterValue, float64(tmpDiskTables),
-			schemaName, digest, digestText,
+			schemaName, digest,
 		)
 		ch <- prometheus.MustNewConstMetric(
 			performanceSchemaEventsStatementsSortMergePassesDesc, prometheus.CounterValue, float64(sortMergePasses),
-			schemaName, digest, digestText,
+			schemaName, digest,
 		)
 		ch <- prometheus.MustNewConstMetric(
 			performanceSchemaEventsStatementsSortRowsDesc, prometheus.CounterValue, float64(sortRows),
-			schemaName, digest, digestText,
+			schemaName, digest,
 		)
 		ch <- prometheus.MustNewConstMetric(
 			performanceSchemaEventsStatementsNoIndexUsedDesc, prometheus.CounterValue, float64(noIndexUsed),
-			schemaName, digest, digestText,
+			schemaName, digest,
 		)
 	}
 	return nil

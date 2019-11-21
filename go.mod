@@ -9,6 +9,7 @@ require (
 	github.com/golang/protobuf v1.3.2 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20190430165422-3e4dfb77656c // indirect
 	github.com/kr/pretty v0.1.0 // indirect
+	github.com/mdempsky/gocode v0.0.0-20190203001940-7fb65232883f // indirect
 	github.com/prometheus/client_golang v1.0.0
 	github.com/prometheus/client_model v0.0.0-20190129233127-fd36f4220a90
 	github.com/prometheus/common v0.6.0
