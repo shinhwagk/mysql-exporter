@@ -65,6 +65,7 @@ var (
 
 // scrapers lists all possible collection methods and if they should be enabled by default.
 var scrapers = map[collector.Scraper]bool{
+	collector.ScrapePerfEventsStatements{}: false,
 }
 
 func parseMycnf(config interface{}) (string, error) {
