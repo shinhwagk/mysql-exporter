@@ -36,7 +36,7 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 	"gopkg.in/ini.v1"
 
-	"github.com/shinhwagk/mysqld_exporter/collector"
+	// "github.com/shinhwagk/mysqld_exporter/collector"
 )
 
 var (
@@ -65,29 +65,6 @@ var (
 
 // scrapers lists all possible collection methods and if they should be enabled by default.
 var scrapers = map[collector.Scraper]bool{
-	collector.ScrapeGlobalStatus{}:                        true,
-	collector.ScrapeSlaveStatus{}:                         true,
-	collector.ScrapeProcesslist{}:                         false,
-	collector.ScrapeUser{}:                                false,
-	collector.ScrapeTableSchema{}:                         false,
-	collector.ScrapeInfoSchemaInnodbTablespaces{}:         false,
-	collector.ScrapeInnodbMetrics{}:                       false,
-	collector.ScrapeAutoIncrementColumns{}:                false,
-	collector.ScrapeBinlogSize{}:                          false,
-	collector.ScrapePerfTableIOWaits{}:                    false,
-	collector.ScrapePerfIndexIOWaits{}:                    false,
-	collector.ScrapePerfTableLockWaits{}:                  false,
-	collector.ScrapePerfEventsStatements{}:                false,
-	collector.ScrapePerfEventsWaits{}:                     false,
-	collector.ScrapePerfFileEvents{}:                      false,
-	collector.ScrapePerfFileInstances{}:                   false,
-	collector.ScrapePerfReplicationGroupMemberStats{}:     false,
-	collector.ScrapePerfReplicationApplierStatsByWorker{}: false,
-	collector.ScrapeInnodbCmp{}:                           true,
-	collector.ScrapeInnodbCmpMem{}:                        true,
-	collector.ScrapeEngineInnodbStatus{}:                  false,
-	collector.ScrapeHeartbeat{}:                           false,
-	collector.ScrapeSlaveHosts{}:                          false,
 }
 
 func parseMycnf(config interface{}) (string, error) {
