@@ -1,5 +1,6 @@
 {
     "editor.formatOnSave": true,
     "go.useLanguageServer": true,
-    "files.eol": "\n"
+    "files.eol": "\n",
+    "editor.insertSpaces": true
 }

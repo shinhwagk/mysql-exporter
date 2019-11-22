@@ -26,7 +26,7 @@ import (
 const infoSchemaProcesslistCountQuery = `
 		SELECT user,
 			SUBSTRING_INDEX(host, ':', 1) AS host,
-			db                            as dbname,
+			COALESCE(db, '')              AS dbname,
 			COALESCE(command, '')         AS command,
 			COALESCE(state, '')           AS state,
 			COUNT(*)                      AS processes,
