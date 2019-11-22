@@ -53,7 +53,7 @@ const perfEventsStatementsQuery = `
 		quantile_999
 	FROM performance_schema.events_statements_summary_by_digest
 		WHERE schema_name NOT IN ('mysql', 'performance_schema', 'information_schema')
-		AND last_seen >= DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i'), INTERVAL 60 SECOND)
+		AND last_seen >= DATE_SUB(NOW(), INTERVAL 60 SECOND)
 	`
 
 // Metric descriptors.
