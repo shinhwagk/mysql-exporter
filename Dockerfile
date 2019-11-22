@@ -4,8 +4,6 @@ ENV GOBIN /go/bin
 
 RUN git clone --depth=1 https://github.com/shinhwagk/mysqld_exporter
 WORKDIR mysqld_exporter
-# RUN go get -v github.com/shinhwagk/mysqld_exporter/collector
-# WORKDIR /go/src/github.com/shinhwagk/oracle_exporter
 
 RUN go get -v
 
