@@ -26,7 +26,7 @@ import (
 const perfEventsStatementsQuery = `
 	SELECT
 		schema_name,
-		digest,
+		md5(digest) digest,
 		count_star,
 		sum_timer_wait,
 		sum_lock_time,
