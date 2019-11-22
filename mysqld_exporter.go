@@ -36,7 +36,7 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 	"gopkg.in/ini.v1"
 
-	// "github.com/shinhwagk/mysqld_exporter/collector"
+	"github.com/shinhwagk/mysqld_exporter/collector"
 )
 
 var (
