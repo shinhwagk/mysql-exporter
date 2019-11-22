@@ -55,7 +55,6 @@ collect.auto_increment.columns                               | 5.1           | C
 collect.binlog_size                                          | 5.1           | Collect the current size of all registered binlog files
 collect.engine_innodb_status                                 | 5.1           | Collect from SHOW ENGINE INNODB STATUS.
 collect.global_status                                        | 5.1           | Collect from SHOW GLOBAL STATUS (Enabled by default)
-collect.global_variables                                     | 5.1           | Collect from SHOW GLOBAL VARIABLES (Enabled by default)
 collect.info_schema.innodb_metrics                           | 5.6           | Collect metrics from information_schema.innodb_metrics.
 collect.info_schema.innodb_tablespaces                       | 5.7           | Collect metrics from information_schema.innodb_sys_tablespaces.
 collect.info_schema.innodb_cmp                               | 5.5           | Collect InnoDB compressed tables metrics from information_schema.innodb_cmp.
