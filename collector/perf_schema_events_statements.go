@@ -325,7 +325,7 @@ func (ScrapePerfEventsStatements) Scrape(ctx context.Context, db *sql.DB, ch cha
 			schemaName, digest,
 		)
 		ch <- prometheus.MustNewConstMetric(
-			performanceSchemaEventsStatementsQuantile99Desc, prometheus.CounterValue, float64(quantile99),
+			performanceSchemaEventsStatementsQuantile999Desc, prometheus.CounterValue, float64(quantile999),
 			schemaName, digest,
 		)
 	}
