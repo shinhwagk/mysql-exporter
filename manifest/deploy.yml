@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-exporter1
+  namespace: monitoring
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: mysql-exporter1
+  template:
+    metadata:
+      labels:
+        app: mysql-exporter1
+    spec:
+      containers:
+        - name: mysql-exporter1
+          env:
+            - name: DATA_SOURCE_NAME
+              value: root:my-secret-pw@(10.65.193.51:3307)/
+          image: shinhwagk/mysqld-exporter
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9104
+              name: https
+              protocol: TCP

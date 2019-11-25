@@ -67,6 +67,7 @@ var (
 var scrapers = map[collector.Scraper]bool{
 	collector.ScrapePerfEventsStatements{}: true,
 	collector.ScrapeProcesslist{}:          true,
+	collector.ScrapePerfEventsWaits{}:      true
 }
 
 func parseMycnf(config interface{}) (string, error) {
