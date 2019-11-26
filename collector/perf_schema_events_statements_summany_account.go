@@ -27,7 +27,7 @@ const perfEventsStatementsSummanyAccountQuery = `
 	SELECT
 		user,
 		host,
-		event_name,
+		SUBSTRING(event_name, 15),
 		count_star,
 		sum_timer_wait,
 		sum_lock_time,
