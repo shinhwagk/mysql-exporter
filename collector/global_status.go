@@ -33,39 +33,39 @@ const (
 )
 
 // Regexp to match various groups of status vars.
-var globalStatusRE = regexp.MustCompile(`^(com|handler|connection_errors|innodb_buffer_pool|innodb_rows|performance_schema)_(.*)$`)
+var globalStatusRE = regexp.MustCompile(`^(com|handler|innodb|performance_schema|mysqlx)_(.*)$`)
 
 // Metric descriptors.
 var (
 	globalCommandsDesc = prometheus.NewDesc(
-		prometheus.BuildFQName(namespace, globalStatus, "commands_total"),
+		prometheus.BuildFQName(namespace, globalStatus, "com"),
 		"Total number of executed MySQL commands.",
-		[]string{"command"}, nil,
-	)
-	globalHandlerDesc = prometheus.NewDesc(
-		prometheus.BuildFQName(namespace, globalStatus, "handlers_total"),
-		"Total number of executed MySQL handlers.",
-		[]string{"handler"}, nil,
-	)
-	globalConnectionErrorsDesc = prometheus.NewDesc(
-		prometheus.BuildFQName(namespace, globalStatus, "connection_errors_total"),
-		"Total number of MySQL connection errors.",
-		[]string{"error"}, nil,
-	)
-	globalInnodbBufferPoolDesc = prometheus.NewDesc(
-		prometheus.BuildFQName(namespace, globalStatus, "inodb_buffer_pool"),
-		"Innodb buffer pool page state changes.",
 		[]string{"name"}, nil,
 	)
-	globalInnoDBRowOpsDesc = prometheus.NewDesc(
-		prometheus.BuildFQName(namespace, globalStatus, "innodb_row_ops_total"),
-		"Total number of MySQL InnoDB row operations.",
-		[]string{"operation"}, nil,
+	globalHandlerDesc = prometheus.NewDesc(
+		prometheus.BuildFQName(namespace, globalStatus, "handlers"),
+		"Total number of executed MySQL handlers.",
+		[]string{"name"}, nil,
 	)
-	globalPerformanceSchemaLostDesc = prometheus.NewDesc(
-		prometheus.BuildFQName(namespace, globalStatus, "performance_schema_lost_total"),
+	globalInnodbDesc = prometheus.NewDesc(
+		prometheus.BuildFQName(namespace, globalStatus, "innodb"),
+		"Innodb.",
+		[]string{"name"}, nil,
+	)
+	globalMysqlxDesc = prometheus.NewDesc(
+		prometheus.BuildFQName(namespace, globalStatus, "mysqlx"),
+		"mysqlx.",
+		[]string{"name"}, nil,
+	)
+	globalPerformanceSchemaDesc = prometheus.NewDesc(
+		prometheus.BuildFQName(namespace, globalStatus, "performance_schema"),
 		"Total number of MySQL instrumentations that could not be loaded or created due to memory constraints.",
-		[]string{"instrumentation"}, nil,
+		[]string{"name"}, nil,
+	)
+	globalOtherDesc = prometheus.NewDesc(
+		prometheus.BuildFQName(namespace, globalStatus, "other"),
+		"Total number of MySQL instrumentations that could not be loaded or created due to memory constraints.",
+		[]string{"name"}, nil,
 	)
 )
 
@@ -106,38 +106,20 @@ func (ScrapeGlobalStatus) Scrape(ctx context.Context, db *sql.DB, ch chan<- prom
 			key = validPrometheusName(key)
 			match := globalStatusRE.FindStringSubmatch(key)
 			if match == nil {
-				ch <- prometheus.MustNewConstMetric(
-					newDesc(globalStatus, key, "Generic metric from SHOW GLOBAL STATUS."),
-					prometheus.UntypedValue,
-					floatVal,
-				)
+				ch <- prometheus.MustNewConstMetric(globalOtherDesc, prometheus.CounterValue, floatVal, key)
 				continue
 			}
 			switch match[1] {
 			case "com":
-				ch <- prometheus.MustNewConstMetric(
-					globalCommandsDesc, prometheus.CounterValue, floatVal, match[2],
-				)
+				ch <- prometheus.MustNewConstMetric(globalCommandsDesc, prometheus.CounterValue, floatVal, match[2])
 			case "handler":
-				ch <- prometheus.MustNewConstMetric(
-					globalHandlerDesc, prometheus.CounterValue, floatVal, match[2],
-				)
-			case "connection_errors":
-				ch <- prometheus.MustNewConstMetric(
-					globalConnectionErrorsDesc, prometheus.CounterValue, floatVal, match[2],
-				)
-			case "innodb_buffer_pool":
-				ch <- prometheus.MustNewConstMetric(
-					globalInnodbBufferPoolDesc, prometheus.CounterValue, floatVal, match[2],
-				)
-			case "innodb_rows":
-				ch <- prometheus.MustNewConstMetric(
-					globalInnoDBRowOpsDesc, prometheus.CounterValue, floatVal, match[2],
-				)
+				ch <- prometheus.MustNewConstMetric(globalHandlerDesc, prometheus.CounterValue, floatVal, match[2])
+			case "innodb":
+				ch <- prometheus.MustNewConstMetric(globalInnodbDesc, prometheus.CounterValue, floatVal, match[2])
 			case "performance_schema":
-				ch <- prometheus.MustNewConstMetric(
-					globalPerformanceSchemaLostDesc, prometheus.CounterValue, floatVal, match[2],
-				)
+				ch <- prometheus.MustNewConstMetric(globalPerformanceSchemaDesc, prometheus.CounterValue, floatVal, match[2])
+			case "mysqlx":
+				ch <- prometheus.MustNewConstMetric(globalMysqlxDesc, prometheus.CounterValue, floatVal, match[2])
 			}
 		}
 	}
