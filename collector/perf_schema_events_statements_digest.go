@@ -185,7 +185,7 @@ type ScrapePerfEventsStatements struct{}
 
 // Name of the Scraper. Should be unique.
 func (ScrapePerfEventsStatements) Name() string {
-	return "perf_schema.eventsstatements"
+	return "perf_schema.eventsstatementsdigest"
 }
 
 // Help describes the role of the Scraper.
@@ -222,11 +222,11 @@ func (ScrapePerfEventsStatements) Scrape(ctx context.Context, db *sql.DB, ch cha
 		if err := perfSchemaEventsStatementsRows.Scan(
 			&schemaName, &digest,
 			&countStar, &timerWait, &lockTime,
-			&errors, &warnings, &rowsAffected,
-			&rowsExamined, &rowsSent, &rowsExamined,
+			&errors, &warnings,
+			&rowsAffected, &rowsSent, &rowsExamined,
 			&tmpTables, &tmpDiskTables,
 			&selectFullJoin, &selectfullRangeJoin, &selectRange, &selectRangeCheck, &selectScan,
-			&sortMergePasses, &sortRange, &sortScan,
+			&sortMergePasses, &sortRange, &sortRows, &sortScan,
 			&noIndexUsed, &noGoodIndexUsed,
 			&quantile95, &quantile99, &quantile999,
 		); err != nil {
