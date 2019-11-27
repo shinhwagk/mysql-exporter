@@ -8,7 +8,6 @@ jobs:
       - uses: actions/setup-go@v1
         with:
           go-version: "1.13.4"
-      - run: go env  
       - run: go get -v github.com/shinhwagk/mysqld_exporter
       - run: go build -o mysqld_exporter
       - name: Publish to Registry
