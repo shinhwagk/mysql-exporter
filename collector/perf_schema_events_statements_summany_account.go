@@ -27,7 +27,7 @@ const perfEventsStatementsSummanyAccountQuery = `
 	SELECT
 		user,
 		host,
-		SUBSTRING(event_name, 15),
+		event_name,
 		count_star,
 		sum_timer_wait,
 		sum_lock_time,
@@ -50,7 +50,7 @@ const perfEventsStatementsSummanyAccountQuery = `
 		sum_no_index_used,
 		sum_no_good_index_used
 	FROM performance_schema.events_statements_summary_by_account_by_event_name
-		WHERE USER NOT IN ('mysql')
+		WHERE user is not null
 	`
 
 // Metric descriptors.
