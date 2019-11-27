@@ -9,7 +9,8 @@ jobs:
         with:
           go-version: "1.13.4"
       - run: go env  
-      - run: go get -v
+      - run: go get -v github.com/shinhwagk/mysqld_exporter/collector
+      - run: go build -o mysqld_exporter
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
