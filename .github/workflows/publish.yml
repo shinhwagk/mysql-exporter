@@ -8,7 +8,8 @@ jobs:
       - uses: actions/setup-go@v1
         with:
           go-version: "1.13.4"
-      - run: go env
+      - run: ls -l ./
+      - run: pwd
       - run: go build -o mysqld_exporter
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
