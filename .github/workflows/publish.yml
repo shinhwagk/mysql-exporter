@@ -11,9 +11,6 @@ jobs:
       - run: go get -v -u
         env:
           GOBIN: /home/runner/go/bin
-      - run: go build -o mysqld_exporter  
-        env:
-          GOBIN: /home/runner/go/bin
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
