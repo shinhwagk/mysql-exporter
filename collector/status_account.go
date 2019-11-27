@@ -27,7 +27,7 @@ const (
 	// Scrape query.
 	statusAccountQuery = `select user, host, variable_name, variable_value FROM performance_schema.status_by_account WHERE user IS NOT NULL`
 	// Subsystem.
-	status = "status"
+	status = "status_account"
 )
 
 // Metric descriptors.
