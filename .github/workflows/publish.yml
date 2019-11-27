@@ -8,9 +8,7 @@ jobs:
       - uses: actions/setup-go@v1
         with:
           go-version: "1.13.4"
-      - run: ls -l ./
-      - run: pwd
-      - run: go get -v
+      - run: go get -v -u && go build -o mysqld_exporter
         env:
           GOBIN: /home/runner/go/bin
       - name: Publish to Registry
