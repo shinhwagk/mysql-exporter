@@ -217,11 +217,11 @@ func (ScrapePerfEventsStatementsSummaryAccount) Scrape(ctx context.Context, db *
 			user, host, event,
 		)
 		ch <- prometheus.MustNewConstMetric(
-			performanceSchemaEventsStatementsSummaryAccountTimerWaitDesc, prometheus.CounterValue, float64(timerWait)/picoSeconds,
+			performanceSchemaEventsStatementsSummaryAccountTimerWaitDesc, prometheus.CounterValue, float64(timerWait)/picoMilliseconds,
 			user, host, event,
 		)
 		ch <- prometheus.MustNewConstMetric(
-			performanceSchemaEventsStatementsSummaryAccountLockTimeDesc, prometheus.CounterValue, float64(lockTime)/picoSeconds,
+			performanceSchemaEventsStatementsSummaryAccountLockTimeDesc, prometheus.CounterValue, float64(lockTime)/picoMilliseconds,
 			user, host, event,
 		)
 		ch <- prometheus.MustNewConstMetric(

@@ -237,11 +237,11 @@ func (ScrapePerfEventsStatements) Scrape(ctx context.Context, db *sql.DB, ch cha
 			schemaName, digest,
 		)
 		ch <- prometheus.MustNewConstMetric(
-			performanceSchemaEventsStatementsTimerWaitDesc, prometheus.CounterValue, float64(timerWait)/picoSeconds,
+			performanceSchemaEventsStatementsTimerWaitDesc, prometheus.CounterValue, float64(timerWait)/picoMilliseconds,
 			schemaName, digest,
 		)
 		ch <- prometheus.MustNewConstMetric(
-			performanceSchemaEventsStatementsLockTimeDesc, prometheus.CounterValue, float64(lockTime)/picoSeconds,
+			performanceSchemaEventsStatementsLockTimeDesc, prometheus.CounterValue, float64(lockTime)/picoMilliseconds,
 			schemaName, digest,
 		)
 		ch <- prometheus.MustNewConstMetric(

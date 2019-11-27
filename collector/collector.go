@@ -26,7 +26,7 @@ const (
 	// Exporter namespace.
 	namespace = "mysql"
 	// Math constant for picoseconds to seconds.
-	picoSeconds = 1e12
+	picoMilliseconds = 1e9
 )
 
 var logRE = regexp.MustCompile(`.+\.(\d+)$`)
