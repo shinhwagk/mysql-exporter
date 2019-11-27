@@ -1,5 +1,5 @@
 FROM alpine:latest
 
-COPY mysql_exporter .
+COPY mysqld_exporter .
 
 ENTRYPOINT [ "/mysqld_exporter" ]
