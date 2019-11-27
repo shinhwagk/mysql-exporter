@@ -33,6 +33,7 @@ import (
 	"github.com/prometheus/common/promlog"
 	"github.com/prometheus/common/promlog/flag"
 	"github.com/prometheus/common/version"
+	"github.com/prometheus/mysqld_exporter/collector"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"gopkg.in/ini.v1"
 
@@ -65,10 +66,11 @@ var (
 
 // scrapers lists all possible collection methods and if they should be enabled by default.
 var scrapers = map[collector.Scraper]bool{
+	collector.ScrapeGlobalStatus{}:                       true,
 	collector.ScrapePerfEventsStatements{}:               true,
 	collector.ScrapeProcesslist{}:                        true,
-	collector.ScrapeGlobalStatus{}:                       true,
 	collector.ScrapePerfEventsStatementsSummaryAccount{}: true,
+	collector.ScrapeStatusAccount{}:                      true,
 }
 
 func parseMycnf(config interface{}) (string, error) {
