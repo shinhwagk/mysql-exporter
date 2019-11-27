@@ -37,72 +37,72 @@ var (
 	pstiw1 = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, performanceSchema, "table_io_waits_star_total"),
 		"The total number of table I/O wait events for each table and operation.",
-		[]string{"schema", "name"}, nil,
+		[]string{"object_type", "object_schema", "object_name"}, nil,
 	)
 	pstiw2 = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, performanceSchema, "table_io_waits_read_total"),
 		"The total time of table I/O wait events for each table and operation.",
-		[]string{"schema", "name"}, nil,
+		[]string{"object_type", "object_schema", "object_name"}, nil,
 	)
 	pstiw3 = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, performanceSchema, "table_io_waits_write_total"),
 		"The total time of table I/O wait events for each table and operation.",
-		[]string{"schema", "name"}, nil,
+		[]string{"object_type", "object_schema", "object_name"}, nil,
 	)
 	pstiw4 = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, performanceSchema, "table_io_waits_fetch_total"),
 		"The total time of table I/O wait events for each table and operation.",
-		[]string{"schema", "name"}, nil,
+		[]string{"object_type", "object_schema", "object_name"}, nil,
 	)
 	pstiw5 = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, performanceSchema, "table_io_waits_insert_total"),
 		"The total time of table I/O wait events for each table and operation.",
-		[]string{"schema", "name"}, nil,
+		[]string{"object_type", "object_schema", "object_name"}, nil,
 	)
 	pstiw6 = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, performanceSchema, "table_io_waits_update_total"),
 		"The total time of table I/O wait events for each table and operation.",
-		[]string{"schema", "name"}, nil,
+		[]string{"object_type", "object_schema", "object_name"}, nil,
 	)
 	pstiw7 = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, performanceSchema, "table_io_waits_delete_total"),
 		"The total time of table I/O wait events for each table and operation.",
-		[]string{"schema", "name"}, nil,
+		[]string{"object_type", "object_schema", "object_name"}, nil,
 	)
 	pstiw8 = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, performanceSchema, "table_io_waits_millisecond_total"),
 		"The total time of table I/O wait events for each table and operation.",
-		[]string{"schema", "name"}, nil,
+		[]string{"object_type", "object_schema", "object_name"}, nil,
 	)
 	pstiw9 = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, performanceSchema, "table_io_waits_read_millisecond_total"),
 		"The total time of table I/O wait events for each table and operation.",
-		[]string{"schema", "name"}, nil,
+		[]string{"object_type", "object_schema", "object_name"}, nil,
 	)
 	pstiw10 = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, performanceSchema, "table_io_waits_write_millisecond_total"),
 		"The total time of table I/O wait events for each table and operation.",
-		[]string{"schema", "name"}, nil,
+		[]string{"object_type", "object_schema", "object_name"}, nil,
 	)
 	pstiw11 = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, performanceSchema, "table_io_waits_fatch_millisecond_total"),
 		"The total time of table I/O wait events for each table and operation.",
-		[]string{"schema", "name"}, nil,
+		[]string{"object_type", "object_schema", "object_name"}, nil,
 	)
 	pstiw12 = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, performanceSchema, "table_io_waits_insert_millisecond_total"),
 		"The total time of table I/O wait events for each table and operation.",
-		[]string{"schema", "name"}, nil,
+		[]string{"object_type", "object_schema", "object_name"}, nil,
 	)
 	pstiw13 = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, performanceSchema, "table_io_waits_update_millisecond_total"),
 		"The total time of table I/O wait events for each table and operation.",
-		[]string{"schema", "name"}, nil,
+		[]string{"object_type", "object_schema", "object_name"}, nil,
 	)
 	pstiw14 = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, performanceSchema, "table_io_waits_delete_millisecond_total"),
 		"The total time of table I/O wait events for each table and operation.",
-		[]string{"schema", "name"}, nil,
+		[]string{"object_type", "object_schema", "object_name"}, nil,
 	)
 )
 

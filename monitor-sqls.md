@@ -50,8 +50,8 @@
 | events_transactions_summary_global_by_event_name     |                 |                                                        |             |       |
 |                                                      |                 |                                                        |             |       |
 | table_handles                                        |                 |                                                        |             |       |
-| table_io_waits_summary_by_index_usage                |                 |                                                        |             |       |
-| table_io_waits_summary_by_table                      |                 |                                                        |             |       |
+| table_io_waits_summary_by_index_usage                |                 |                                                        | YES         |       |
+| table_io_waits_summary_by_table                      |                 |                                                        | YES         |       |
 | table_lock_waits_summary_by_table                    |                 |                                                        |             |       |
 |                                                      |                 |                                                        |             |       |
 | global_status                                        |                 |                                                        |             |       |
