@@ -1,0 +1,1 @@
+rsync -a -v mysqld_exporter.go  /mnt/c/Users/shinh/Desktop/gk@mysqld_exporter/
