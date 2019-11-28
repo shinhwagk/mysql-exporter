@@ -11,7 +11,7 @@ jobs:
       - run: go get -v github.com/shinhwagk/mysqld_exporter
       - run: go build -o mysqld_exporter
       - name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@2.8
         with:
           name: shinhwagk/mysqld_exporter:0.0.2
           username: ${{ secrets.DOCKER_USERNAME }}
