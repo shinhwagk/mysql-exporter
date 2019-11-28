@@ -1,4 +1,4 @@
-FROM quay.io/prometheus/busybox-linux-amd64::glibc
+FROM quay.io/prometheus/busybox-linux-amd64:glibc
 
 COPY mysqld_exporter .
 
