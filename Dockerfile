@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM quay.io/repository/prometheus/busybox-linux-amd64
 
 COPY mysqld_exporter .
 
