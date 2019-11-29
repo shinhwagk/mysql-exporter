@@ -18,6 +18,7 @@ package collector
 import (
 	"context"
 	"database/sql"
+	"strings"
 
 	"github.com/go-kit/kit/log"
 	"github.com/prometheus/client_golang/prometheus"
@@ -72,7 +73,7 @@ func (ScrapeStatusAccount) Scrape(ctx context.Context, db *sql.DB, ch chan<- pro
 		if err := globalStatusRows.Scan(&user, &host, &key, &val); err != nil {
 			return err
 		}
-		ch <- prometheus.MustNewConstMetric(StatusAccountDesc, prometheus.CounterValue, float64(val), user, host, key)
+		ch <- prometheus.MustNewConstMetric(StatusAccountDesc, prometheus.CounterValue, float64(val), user, host, strings.ToLower(key))
 	}
 
 	return nil
