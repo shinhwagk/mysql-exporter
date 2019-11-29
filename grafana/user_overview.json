@@ -14,9 +14,8 @@
   },
   "editable": true,
   "gnetId": null,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "id": 26,
-  "iteration": 1574850350689,
   "links": [],
   "panels": [
     {
@@ -28,15 +27,14 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 7,
-        "w": 7,
+        "h": 6,
+        "w": 6,
         "x": 0,
         "y": 0
       },
       "hiddenSeries": false,
-      "id": 6,
+      "id": 12,
       "legend": {
-        "alignAsTable": false,
         "avg": false,
         "current": false,
         "max": false,
@@ -61,38 +59,26 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "idelta(mysql_perf_schema_events_statements_summary_account_count_star_total{event=\"statement/sql/insert\", user=\"$User\"}[2m])",
+          "expr": "idelta(mysql_status_global{name=\"handler_commit\"}[2m]) / 2 ",
           "interval": "1m",
-          "legendFormat": "Insert",
+          "legendFormat": "Commit",
           "refId": "A"
         },
         {
-          "expr": "idelta(mysql_perf_schema_events_statements_summary_account_count_star_total{event=\"statement/sql/update\", user=\"$User\"}[2m])",
+          "expr": "idelta(mysql_status_global{name=\"handler_rollback\"}[2m]) / 2",
           "interval": "1m",
-          "legendFormat": "Update",
+          "legendFormat": "Rollback",
           "refId": "B"
-        },
-        {
-          "expr": "idelta(mysql_perf_schema_events_statements_summary_account_count_star_total{event=\"statement/sql/delete\", user=\"$User\"}[2m])",
-          "interval": "1m",
-          "legendFormat": "Delete",
-          "refId": "C"
-        },
-        {
-          "expr": "idelta(mysql_perf_schema_events_statements_summary_account_count_star_total{event=\"statement/sql/commit\", user=\"$User\"}[2m])",
-          "interval": "1m",
-          "legendFormat": "Commit",
-          "refId": "D"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "DML",
+      "title": "TPS",
       "tooltip": {
         "shared": true,
-        "sort": 2,
+        "sort": 0,
         "value_type": "individual"
       },
       "type": "graph",
@@ -135,25 +121,25 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 7,
-        "w": 7,
-        "x": 7,
+        "h": 6,
+        "w": 6,
+        "x": 6,
         "y": 0
       },
       "hiddenSeries": false,
-      "id": 4,
+      "id": 13,
       "legend": {
         "avg": false,
-        "current": false,
+        "current": true,
         "max": false,
         "min": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "null as zero",
       "options": {
         "dataLinks": []
       },
@@ -167,7 +153,9 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(idelta(mysql_status_account{name=\"Questions\"}[2m])) by (user) ",
+          "expr": "idelta(mysql_status_global{name=\"questions\"}[2m]) ",
+          "interval": "1m",
+          "legendFormat": "value",
           "refId": "A"
         }
       ],
@@ -175,7 +163,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Panel Title",
+      "title": "QPS",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -211,6 +199,481 @@
         "align": false,
         "alignLevel": null
       }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 7,
+        "x": 12,
+        "y": 0
+      },
+      "hiddenSeries": false,
+      "hideTimeOverride": false,
+      "id": 10,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "idelta(mysql_perf_schema_file_summary_instances_count_star[2m]) > 0",
+          "format": "time_series",
+          "instant": false,
+          "interval": "1m",
+          "legendFormat": "{{file_name}}",
+          "refId": "A"
+        },
+        {
+          "expr": "idelta(mysql_perf_schema_file_summary_instances_read_bytes[2m]) > 0",
+          "format": "time_series",
+          "instant": false,
+          "interval": "1m",
+          "legendFormat": "{{file_name}}",
+          "refId": "B"
+        },
+        {
+          "expr": "idelta(mysql_perf_schema_file_summary_instances_write_bytes [2m]) > 0",
+          "format": "time_series",
+          "instant": false,
+          "interval": "1m",
+          "legendFormat": "{{file_name}}",
+          "refId": "C"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Top File ",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 6
+      },
+      "hiddenSeries": false,
+      "id": 2,
+      "legend": {
+        "avg": false,
+        "current": true,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "idelta(mysql_status_global{name=\"com_insert\"}[2m])",
+          "interval": "1m",
+          "legendFormat": "Insert",
+          "refId": "A"
+        },
+        {
+          "expr": "idelta(mysql_status_global{name=\"com_update\"}[2m])",
+          "interval": "1m",
+          "legendFormat": "Update",
+          "refId": "B"
+        },
+        {
+          "expr": "idelta(mysql_status_global{name=\"com_delete\"}[2m])",
+          "interval": "1m",
+          "legendFormat": "Delete",
+          "refId": "C"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "DML",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 6,
+        "y": 6
+      },
+      "hiddenSeries": false,
+      "id": 4,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "idelta(mysql_status_global{name=\"innodb_buffer_pool_reads\"}[2m])",
+          "interval": "1m",
+          "legendFormat": "reads",
+          "refId": "A"
+        },
+        {
+          "expr": "idelta(mysql_status_global{name=\"innodb_buffer_pool_read_requests\"}[2m])",
+          "interval": "1m",
+          "legendFormat": "read requests",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "innodb_buffer_pool_reads",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 12
+      },
+      "hiddenSeries": false,
+      "id": 6,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(idelta(mysql_perf_schema_events_statements_count_star_total[2m]) / idelta(mysql_perf_schema_events_statements_timer_wait_total[2m]))",
+          "interval": "1m",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "SQL Wait Time",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ms",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 6,
+        "y": 12
+      },
+      "hiddenSeries": false,
+      "id": 8,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "mysql_status_global{name=\"innodb_buffer_pool_bytes_dirty\"}",
+          "interval": "1m",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "dirty buffer",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "decbytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     }
   ],
   "refresh": "1m",
@@ -218,39 +681,14 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": [
-      {
-        "allValue": null,
-        "current": {
-          "text": "shinhwagk",
-          "value": "shinhwagk"
-        },
-        "datasource": "prometheus",
-        "definition": "label_values(mysql_perf_schema_events_statements_summary_account_count_star_total, user)",
-        "hide": 0,
-        "includeAll": false,
-        "label": null,
-        "multi": false,
-        "name": "User",
-        "options": [],
-        "query": "label_values(mysql_perf_schema_events_statements_summary_account_count_star_total, user)",
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "tagValuesQuery": "",
-        "tags": [],
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
-      }
-    ]
+    "list": []
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
+    "hidden": false,
     "refresh_intervals": [
       "5s",
       "10s",
@@ -265,7 +703,7 @@
     ]
   },
   "timezone": "",
-  "title": "Mysql User Overview",
-  "uid": "Cw49j8bWz",
-  "version": 13
+  "title": "New dashboard Copy",
+  "uid": "mVBTiuxZz",
+  "version": 38
 }
