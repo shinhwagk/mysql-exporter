@@ -26,9 +26,7 @@ import (
 )
 
 const (
-	// Scrape query.
 	globalStatusQuery = `SHOW GLOBAL STATUS`
-	// Subsystem.
 	globalStatus = "status_global"
 )
 
@@ -82,6 +80,7 @@ func (ScrapeStatusGlobal) Scrape(ctx context.Context, db *sql.DB, ch chan<- prom
 
 	return nil
 }
+
 func validPrometheusName(s string) string {
 	nameRe := regexp.MustCompile("([^a-zA-Z0-9_])")
 	s = nameRe.ReplaceAllString(s, "_")
