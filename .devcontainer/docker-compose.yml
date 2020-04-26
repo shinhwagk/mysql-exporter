@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspace
+    command: sleep infinity
+    links:
+      - mysql56
+      - mysql57
+      - mysql80
+  mysql56:
+    image: mysql:5.6
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+  mysql57:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    ports:
+      - 3307:3306
+  mysql80:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.ym
+    ports:
+      - 9090:9090
+    links:
+      - mysql56
+      - mysql57
+      - mysql80
