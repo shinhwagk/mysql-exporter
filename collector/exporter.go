@@ -1,16 +1,3 @@
-// Copyright 2018 The Prometheus Authors
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package collector
 
 import (
@@ -108,7 +95,6 @@ func New(ctx context.Context, dsn string, metrics Metrics, scrapers []Scraper, l
 	}
 }
 
-// Describe implements prometheus.Collector.
 func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- e.metrics.TotalScrapes.Desc()
 	ch <- e.metrics.Error.Desc()
@@ -116,7 +102,6 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	ch <- e.metrics.MySQLUp.Desc()
 }
 
-// Collect implements prometheus.Collector.
 func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	e.scrape(e.ctx, ch)
 
@@ -139,10 +124,8 @@ func (e *Exporter) scrape(ctx context.Context, ch chan<- prometheus.Metric) {
 	}
 	defer db.Close()
 
-	// By design exporter should use maximum one connection per request.
 	db.SetMaxOpenConns(1)
 	db.SetMaxIdleConns(1)
-	// Set max lifetime for a connection.
 	db.SetConnMaxLifetime(1 * time.Minute)
 
 	if err := db.PingContext(ctx); err != nil {
@@ -186,7 +169,6 @@ func getMySQLVersion(db *sql.DB) float64 {
 	if err := db.QueryRow(versionQuery).Scan(&versionStr); err == nil {
 		versionNum, _ = strconv.ParseFloat(versionRE.FindString(versionStr), 64)
 	}
-	// If we can't match/parse the version, set it some big value that matches all versions.
 	if versionNum == 0 {
 		versionNum = 999
 	}

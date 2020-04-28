@@ -10,5 +10,6 @@
 	"extensions": [
 		"golang.go-nightly",
 		"yzhang.markdown-all-in-one"
-	]
+	],
+	"shutdownAction": "stopCompose"
 }
